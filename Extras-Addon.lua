@@ -311,12 +311,14 @@ local Drops = Money:add_tab("Drops")
 
 local princessBubblegumLoop = false
 
-Drops:add_button("Princess Robot Bubblegum (On/Off)", function()
-    princessBubblegumLoop = not princessBubblegumLoop
+function spawn_drop(model,amount,pickup,money_value)--function cuz of repeating code
 
-    script.register_looped("princessbubblegumLoop", function(script)
-        local model = joaat("vw_prop_vw_colle_prbubble")
-        local pickup = joaat("PICKUP_CUSTOM_SCRIPT")
+  amount=amount or 3 --default ammount to drop, if wasnt set in the function args
+  dropLoop = not dropLoop
+  pickup= pickup or joaat("PICKUP_CUSTOM_SCRIPT")
+  money_value = money_value or 0
+    script.register_looped("dropLoop", function(script)
+
         local player_id = network.get_selected_player()
         local money_value = 0
 
@@ -326,242 +328,48 @@ Drops:add_button("Princess Robot Bubblegum (On/Off)", function()
         end
 
         if STREAMING.HAS_MODEL_LOADED(model) then
-		gui.show_message("RP/Cash Drop Started", "Princess Robot Bubblegum Drops inbound!")
-            local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-			local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-			local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-
-            local net_id = NETWORK.OBJ_TO_NET(objectIdSpawned)
-            NETWORK.SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(objectIdSpawned, true)
+		gui.show_message("RP/Cash Drop Started", "Drops inbound!")
+           	local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
+		for i=1,amount do --loop to easy set the amount of drops
+            		local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
+             			pickup,
+                		coords.x,
+                		coords.y,
+                		coords.z + 1,
+                		3,
+                		money_value,
+                		model,
+                		true,
+                		false
+            		)
+			local net_id = NETWORK.OBJ_TO_NET(objectIdSpawned)
+           		NETWORK.SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(objectIdSpawned, true)
+		end
+   
         end
 		sleep(0.4) -- Sets the timer in seconds for how long this should pause before sending another figure
-        if not princessBubblegumLoop then
-            script.unregister_script("princessbubblegumLoop")
+        if not dropLoop then
+            script.unregister_script("dropLoop")
         end
     end)
+end
+Drops:add_button("Princess Robot Bubblegum (On/Off)", function()
+   	spawn_drop(joaat("vw_prop_vw_colle_prbubble"))
 end)
 Drops:add_sameline()
 Drops:add_button("Alien (On/Off)", function()
-   alienfigurineLoop = not alienfigurineLoop
-
-    script.register_looped("alienfigurineLoop", function(script)
-        local model = joaat("vw_prop_vw_colle_alien")
-        local pickup = joaat("PICKUP_CUSTOM_SCRIPT")
-        local player_id = network.get_selected_player()
-        local money_value = 0
-
-        STREAMING.REQUEST_MODEL(model)
-        while STREAMING.HAS_MODEL_LOADED(model) == false do
-            script:yield()
-        end
-
-        if STREAMING.HAS_MODEL_LOADED(model) then
-		gui.show_message("RP/Cash Drop Started", "Alien Drops inbound!")
-            local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-			local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-			local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-
-            local net_id = NETWORK.OBJ_TO_NET(objectIdSpawned)
-            NETWORK.SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(objectIdSpawned, true)
-        end
-		sleep(0.4) -- Sets the timer in seconds for how long this should pause before sending another figure
-        if not alienfigurineLoop then
-            script.unregister_script("alienfigurineLoop")
-        end
-    end)
+   	spawn_drop(joaat("vw_prop_vw_colle_alien"))
 end)
 Drops:add_sameline()
 Drops:add_button("Casino Cards (On/Off)", function()
-   casinocardsLoop = not casinocardsLoop
-
-    script.register_looped("casinocardsLoop", function(script)
-        local model = joaat("vw_prop_vw_lux_card_01a")
-        local pickup = joaat("PICKUP_CUSTOM_SCRIPT")
-        local player_id = network.get_selected_player()
-        local money_value = 0
-
-        STREAMING.REQUEST_MODEL(model)
-        while STREAMING.HAS_MODEL_LOADED(model) == false do
-            script:yield()
-        end
-
-        if STREAMING.HAS_MODEL_LOADED(model) then
-		gui.show_message("RP/Cash Drop Started", "Casino Card Drops inbound!")
-            local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-			local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-			local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-		
-            local net_id = NETWORK.OBJ_TO_NET(objectIdSpawned)
-            NETWORK.SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(objectIdSpawned, true)
-        end
-		sleep(0.4) -- Sets the timer in seconds for how long this should pause before sending another figure
-        if not casinocardsLoop then
-            script.unregister_script("casinocardsLoop")
-        end
-    end)
+  	spawn_drop(joaat("vw_prop_vw_lux_card_01a"))		
 end)
 Drops:add_sameline()
 Drops:add_button("Cash Loop (On/Off)", function()
-kcashLoop = not kcashLoop
-    script.register_looped("kcashLoop", function(script)
-        local model = joaat("ch_prop_ch_cashtrolley_01a")
-        local pickup = joaat("PICKUP_MONEY_VARIABLE")
-        local player_id = network.get_selected_player()
-
-        local money_value = 2000
-
-        STREAMING.REQUEST_MODEL(model)
-        while STREAMING.HAS_MODEL_LOADED(model) == false do
-            script:yield()
-        end
-
-        if STREAMING.HAS_MODEL_LOADED(model) then
-		gui.show_message("Cash Drop Started", "LOCAL CASH WORKS ON PICKUP but other players cannot see it!")
-            local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-			local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-			local coords = ENTITY.GET_ENTITY_COORDS(PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(player_id), true)
-            local objectIdSpawned = OBJECT.CREATE_AMBIENT_PICKUP(
-                pickup,
-                coords.x,
-                coords.y,
-                coords.z + 1,
-                3,
-                money_value,
-                model,
-                true,
-                false
-            )
-
-            local net_id = NETWORK.OBJ_TO_NET(objectIdSpawned)
-            NETWORK.SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(objectIdSpawned, true)
-        end
-		sleep(0.1) -- Sets the timer in seconds for how long this should pause before sending another figure
-		if not kcashLoop then
-            script.unregister_script("kcashLoop")
-        end
-    end)
+	 spawn_drop(joaat("ch_prop_ch_cashtrolley_01a"),3,joaat("PICKUP_MONEY_VARIABLE"),2000)
 end)
+
+
 
 Drops:add_separator()
 Drops:add_text("Cash loop is REAL but only for you, other players cannot see it at all");
@@ -1358,7 +1166,7 @@ Gif:add_button("Get Vehicle Stats", function()
 	end 
  
  
-	if last_veh  then 
+	if last_veh  then --lol
 		local playerName = PLAYER.GET_PLAYER_NAME(selectedPlayer)
 		gui.show_message("Info", 
 			"user :"..PLAYER.GET_PLAYER_NAME(selectedPlayer).."->"..NETWORK.NETWORK_HASH_FROM_PLAYER_HANDLE(selectedPlayer).."->".. joaat(playerName).."\n".. --NETWORK.GET_HASH_KEY(playerName).."\n"..
@@ -1394,7 +1202,91 @@ Gif:add_button("Spawn Vehicle", function()
         gui.show_message("Vehicle Spawner", "Failed to spawn vehicle.")
     end
 end)
+Gif:add_button("Clone Vehicle", function()--im sure i forget some stuff, or even got a typo
+    	local player_id = network.get_selected_player()
+	local player_ped = PLAYER.GET_PLAYER_PED(selectedPlayer)
+		
+	if PED.IS_PED_IN_ANY_VEHICLE(player_ped, true) then
+		local cur_veh = PED.GET_VEHICLE_PED_IS_IN(player_ped, true)
+		local modelHash = ENTITY.GET_ENTITY_MODEL(cur_veh)
+    		local coords = ENTITY.GET_ENTITY_COORDS(cur_veh)
+    		local new_veh = VEHICLE.CREATE_VEHICLE(modelHash, coords.x + 5, coords.y, coords.z, ENTITY.GET_ENTITY_HEADING(cur_veh), true, true, true)
+		ENTITY.FREEZE_ENTITY_POSITION(new_veh, true)
+			
+		--copy vars
+ 		DECORATOR.DECOR_SET_INT(new_veh, "MPBitset", DECORATOR.DECOR_GET_INT(last_veh , "MPBitset"))
+        	DECORATOR.DECOR_SET_INT(new_veh, "Previous_Owner", DECORATOR.DECOR_GET_INT(last_veh , "Previous_Owner"))
+        	DECORATOR.DECOR_SET_INT(new_veh, "Veh_Modded_By_Player", DECORATOR.DECOR_GET_INT(last_veh , "Veh_Modded_By_Player"))
+        	DECORATOR.DECOR_SET_INT(new_veh, "Not_Allow_As_Saved_Veh", DECORATOR.DECOR_GET_INT(last_veh , "Not_Allow_As_Saved_Veh"))
+        	DECORATOR.DECOR_SET_INT(new_veh, "Player_Vehicle", DECORATOR.DECOR_GET_INT(last_veh , "Player_Vehicle"))
+		
+	
 
+		--headlights
+		local r, g, b = VEHICLE.GET_VEHICLE_XENON_LIGHTS_CUSTOM_COLOR(cur_veh, r, g, b)
+		if r then 
+			VEHICLE.SET_VEHICLE_XENON_LIGHTS_CUSTOM_COLOR(new_veh, r, g, b);
+		end
+
+		--neon
+		for i=0,3 do
+			VEHICLE._SET_VEHICLE_NEON_LIGHT_ENABLED(new_veh, i,VEHICLE._IS_VEHICLE_NEON_LIGHT_ENABLED(cur_veh, i))
+		end
+		local r, g, b = VEHICLE._GET_VEHICLE_NEON_LIGHTS_COLOUR(cur_veh)
+		VEHICLE._SET_VEHICLE_NEON_LIGHTS_COLOUR(new_veh, r, g, b)
+		--VEHICLE.SET_VEHICLE_NEON_LIGHTS_COLOR_2(Vehicle vehicle, int color)
+
+		--copy color
+		if VEHICLE.GET_IS_VEHICLE_PRIMARY_COLOUR_CUSTOM(cur_veh) then
+			local r, g, b = VEHICLE.GET_VEHICLE_CUSTOM_PRIMARY_COLOUR(cur_veh)
+			VEHICLE.SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(new_veh, r, g, b)
+		else
+			local paintType,color,pearlescentColor = VEHICLE.GET_VEHICLE_MOD_COLOR_1(cur_veh)
+			VEHICLE.SET_VEHICLE_MOD_COLOR_1(new_veh,paintType,color,pearlescentColor)
+		end
+		if VEHICLE.GET_IS_VEHICLE_SECONDARY_COLOUR_CUSTOM(cur_veh) then
+			local r, g, b = VEHICLE.GET_VEHICLE_CUSTOM_SECONDARY_COLOUR(cur_veh)
+			VEHICLE.SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(new_veh, r, g, b)
+		else
+			local paintType,color = VEHICLE.GET_VEHICLE_MOD_COLOR_2(cur_veh)
+			VEHICLE.SET_VEHICLE_MOD_COLOR_2(new_veh,paintType,color)
+		end
+				
+		
+		--copy mod kit
+		VEHICLE.SET_VEHICLE_MOD_KIT(new_veh,VEHICLE.GET_VEHICLE_MOD_KIT(cur_veh)
+		
+		--copy mods
+		for i=0,50 do
+			--todo: some mods needs special care
+			VEHICLE.SET_VEHICLE_MOD(new_veh, i, VEHICLE.GET_VEHICLE_MOD(cur_veh,i), BOOL customTires)
+		end
+		VEHICLE.COPY_VEHICLE_DAMAGES(cur_veh, new_veh)
+		--numplate missing
+
+				
+		--switch peds
+		for i=-1,VEHICLE.GET_VEHICLE_MODEL_NUMBER_OF_SEATS(modelHash) do
+			if not VEHICLE.IS_VEHICLE_SEAT_FREE(cur_veh,i) then
+				PED.SET_PED_INTO_VEHICLE(VEHICLE.GET_PED_IN_VEHICLE_SEAT(cur_veh, i), new_veh, i)
+			end
+		end		
+
+		--remove old vehicle an unfreeze new vehicle
+		VEHICLE.DELETE_VEHICLE(cur_veh)
+		ENTITY.FREEZE_ENTITY_POSITION(new_veh, false)
+
+				
+    		--Check if the vehicle creation was successful
+		if new_veh ~= 0 then
+			gui.show_message("Vehicle Spawner", "Vehicle spawned successfully!")
+		else
+			gui.show_message("Vehicle Spawner", "Failed to spawn vehicle.")
+		end
+	else
+		 gui.show_message("Vehicle Spawner", "Not in a vehicle.")
+	end
+end)
 -- Upgrade Options
 local Upg = Veh:add_tab("Upgrades")
 
